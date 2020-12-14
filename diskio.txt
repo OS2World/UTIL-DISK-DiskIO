@@ -1,0 +1,157 @@
+DISKIO - Fixed Disk Benchmark, Version 1.15
+(C) 1994-1998 Kai Uwe Rommel
+
+Dhrystone 2.1 C benchmark routines (C) 1988 Reinhold P. Weicker
+
+This is a simple fixed disk and CD-ROM drive benchmark program for
+OS/2 and Windows NT. It measures (approximately) the following
+numbers:
+
+Hard disks:
+- drive cache/bus transfer rate (introduced with version 1.6)
+- data transfer rate (on inner and outer cylinders)
+- CPU usage of full speed disk I/O (introduced with version 1.9)
+- average latency time (discontinued with version 1.15)
+- average data access time
+- multi threaded I/O throughput (introduced with version 1.15)
+- concurrent data transfer on all disks (introduced with version 1.15)
+
+CD-ROM drives (introduced with version 1.10):
+- data transfer rate (at beginning and nearly end of the inserted CD)
+- CPU usage of full speed data reads (in the middle of the inserted CD)
+- average data access time
+
+Concurrent hard disk and CD-ROM drive benchmark (introduced with version 1.10):
+- hard disk data transfer rate
+- CD-ROM drive data transfer rate
+- CPU usage for concurrent full speed I/O on both devices
+
+Note: for all CD-ROM related tests, a CD medium should be inserted that
+contains at least 600 MB of data as a single track, to get comparable
+results (do not use a CD-R or CD-RW media). Since some drives cache
+data, delayed spin-up can cause wrong results. Therefore, you
+should remove and re-insert the test CD immediately before running
+this benchmark program.
+
+The program also measures CPU speed without disk I/O using the Dhrystone 
+CPU benchmark which is needed as calibration for determining the CPU load
+caused by disk I/O. This programs dhrystone results may vary compared to
+those of other programs. However, since the dhrystone results are used
+for relative comparisons within the program, the absolute values do no
+have any influence on the CPU usage results of the I/O benchmarks.
+
+The CPU load caused by the disk I/O of the benchmark routines is
+"measured" by first calculating the Dhrystone benchmark result without
+any disk I/O and then the number of Dhrystone's the CPU could run in
+the background during full speed read operations on the devices. The
+lower the percentage number, the less CPU time is (ab)used by the disk
+interface. This depends on the quality and technology of the disk
+interface (i.e. if it uses PIO or DMA, IDE or SCSI etc.), but also on
+the speed of the host CPU and the speed of the devices.
+
+Of course all values are influenced by other activity on the system,
+so stop all other software if you want reliable results. The results
+will also differ slightly between repeated runs.
+
+The benchmark program needs about 115 seconds to complete on a typical
+system with one hard disk and one CD-ROM drive. On system with more
+disk drives it needs about 5 seconds to calibrate, 70 seconds per hard
+disk, 30 seconds per CD-ROM drive and 20 seconds for the concurrency
+benchmarks.
+
+The individual benchmarks are run on all hard disks and CD-ROM drives
+in the system, if started without arguments. The concurrency benchmarks
+are run using all hard disks (for the all disks concurrent read benchmark)
+and the first hard disk and first CD-ROM drive in the system (for the
+hard disk and CD-ROM concurrent read benchmark).
+
+To run it only for a specific drives, use command line arguments.
+Enter "diskio -?" to get a syntax description for the command line
+arguments.
+
+
+A few hard disk sample results, numbers listed are the data transfer
+rate on track 0 (k/sec), latency time (ms), access time (ms),
+cache/bus speed (k/sec), CPU usage (last two numbers only if result
+was available):
+
+- Pentium PCI/SCSI systems:
+Quantum Atlas + NCR 53c810 + PPro-200:		6932, 0.6, 14, 8060, 15%
+Quantum Atlas + NCR 53c810 + P-100:		6914, 0.8, 14, 7515, 18%
+Quantum Atlas + AHA-2940 + P-133:		6800, 1.3, 13, 6900, 20%
+HP C3323 + NCR 53c810 + P-100:			4569, 1.2, 18, 7016, 21%
+IBM DPES-31080 + NCR 53c810 + P-100:		4186, 1.1, 18, 7008, 15%
+DEC DSP-3160 + NCR 53c810 + P-120:		3930, 2, 16, 6370, 15%
+DEC DSP-3133L + NCR 53c810 + P-100:		4393, 1.5, 17, 6124, 22%
+
+- Pentium PCI/EIDE (Intel Triton/Triton-II) systems:
+Quantum LPS-540A + P-100:			2177, 1.3, 19, 2227, 92%
+Quantum LPS-540A + P-100 (TRIOS2.ADD):		3532, 1.5, 20, 6083, 9%
+Quantum Fireball 1280A + P-100:			6188, 0.7, 16, 6294, 89%
+
+- 486 PCI/SCSI systems:
+HP C3323 + NCR 53c810 + 486-100:		3945, 2, 18, 5045, 54%
+IBM DPES-31080 + NCR 53c810 + 486-100:		4239, 1.3, 18, 6613, 46%
+DEC DSP-3160 + NCR 53c810 + 486-66:		3930, 2, 16
+DEC DSP-3053L + NCR 53c810 + 486-66:		4130, 3, 16
+Quantum LPS-340S + NCR 53c810 + 486-66:		1900, 5, 23
+Maxtor 7345S + NCR 53c810 + 486-66:		1881, 10, 17
+
+- 486 PCI/IDE systems:
+Quantum LPS-540A + IBM1S506.ADD + 486-100:	1796, 1.6, 20, 1820, 94%
+
+- 486 EISA/SCSI systems:
+DEC DSP-3210 + AHA-2740 + 486-50:		3650, 2, 17
+DEC DSP-3160 + AHA-1742 + 486-66:		3050, 3, 18
+
+- 486 ISA systems:
+Quantum LPS-340S + AHA-1542CF + 486-50:		1508, 7, 26
+Quantum LPS-540A + IDE + 486-66:		1492, 4, 21
+
+
+And a few CD-ROM sample results, listing transfer rate (k/sec), 
+access time (ms) and CPU usage (%):
+
+- Pentium PCI/SCSI systems:
+Toshiba 3701 (6.6x) + NCR 53c810 + PPro-200:		990, 160, 14%
+Plextor 8x + NCR 53c810 + P-100:			1222, 134, 29%
+Plextor 12x + NCR 53c810 + P-100:			1722, 123, 37%
+
+- Pentium PCI/EIDE (Intel Triton/Triton-II) systems:
+Sony CDU-311 (8x) + P-100:				1209, 175, 49%
+
+
+Concurrency benchmark sample results, listing hard disk and CD-ROM
+transfer rate (k/sec) and CPU usage (%):
+
+- Pentium PCI/SCSI systems:
+Quantum Atlas + Toshiba 3701 (6.6x) + NCR 53c810 + PPro-200:	5121, 861, 21%
+Quantum Atlas + Plextor 8x + NCR 53c810 + P-100:		4975, 1206, 38%
+
+- Pentium PCI/EIDE (Intel Triton/Triton-II) systems:
+Quantum Fireball 1280A + Sony CDU-311 (8x) + P-100:		3565, 1165, 99%
+
+The above values are getting old and outdated. However, I have not
+enough time to keep an up to date list of typical results ...
+
+
+There is no warranty. Use this software on your own risk. Due to the
+complexity and variety of today's hardware and software which may be
+used to run this program, I am not responsible for any damage or loss of
+data caused by use of this software. It was tested very well and is
+expected to work correctly, but nobody can actually guarantee this for
+any circumstances. And because this software is free, you get what you
+pay for ...
+
+This program can be used freely for private or educational purposes.
+If you want to use it for commercial purposes or want to integrate it
+into another package or find any bugs or have suggestions about
+further enhancement, please contact the author.
+
+Author:   Kai Uwe Rommel
+          Muenchen, Germany
+
+Fax:      +49 89 324 4524
+E-Mail:   rommel@ars.de (preferred)
+	  rommel@leo.org
+
